@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node",
+    "declaration": true,
+    "noImplicitAny": false,
+    "jsx": "react",
+    "sourceMap": true,
+    "lib": ["ES6", "dom"],
+    "experimentalDecorators": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "compileOnSave": false,
+  "exclude": ["node_modules"]
+}
