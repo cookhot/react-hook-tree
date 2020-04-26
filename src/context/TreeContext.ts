@@ -1,14 +1,5 @@
 import * as React from 'react'
+import { HierarchyNode } from 'd3-hierarchy'
+import { TNode } from '../types/index'
 
-// 定义好节点
-interface Node {
-    name: string
-}
-
-// 定义好树的接口
-interface Tree {
-    root?: Node
-}
-
-
-export default React.createContext(null)
+export default React.createContext<HierarchyNode<TNode>>(null)

@@ -1,17 +1,16 @@
 import * as React from 'react'
 import * as ReactDom from 'react-dom'
-import { hierarchy, stratify, cluster } from 'd3-hierarchy'
-
+import { hierarchy, stratify, cluster, HierarchyNode } from 'd3-hierarchy'
 import TreeContext from './context/TreeContext'
+import { TNode } from './types/index'
 
 import App from './app'
 
-interface Item {
-    id: string,
-    parentId: string
+interface Item<Datum> extends HierarchyNode<Datum> {
+
 }
 
-var table: Item[] = [
+var table: TNode[] = [
     { "id": "Eve", "parentId": "" },
     { "id": "Cain", "parentId": "Eve" },
     { "id": "Seth", "parentId": "Eve" },
@@ -23,7 +22,7 @@ var table: Item[] = [
     { "id": "Azura", "parentId": "Eve" }
 ];
 
-const root = stratify<Item>().id(v => v.id).parentId( v => v.parentId )(table)
+const root = stratify<TNode>().id(v => v.id).parentId( v => v.parentId )(table)
 
 ReactDom.render(<TreeContext.Provider value={root}>
     <App/>

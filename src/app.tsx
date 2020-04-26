@@ -2,14 +2,14 @@ import * as React from 'react'
 import { useContext } from 'react'
 import TreeContext from './context/TreeContext'
 import Chart from './components/chart'
-
-
+import Tree from './components/tree'
 
 export default () => {
-    const tree = useContext(TreeContext)
+    const root = useContext(TreeContext)
     return (
         <Chart width={600} height={400} render={(_width, _height) => {
-                return null
+
+                return (<Tree root={root} width={_width} height={_height}></Tree>)
             }}
         >
         </Chart>
