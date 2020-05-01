@@ -6,10 +6,6 @@ import { TNode } from './types/index'
 
 import App from './app'
 
-interface Item<Datum> extends HierarchyNode<Datum> {
-
-}
-
 var table: TNode[] = [
     { "id": "Eve", "parentId": "" },
     { "id": "Cain", "parentId": "Eve" },

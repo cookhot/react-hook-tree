@@ -7,8 +7,7 @@ import Tree from './components/tree'
 export default () => {
     const root = useContext(TreeContext)
     return (
-        <Chart width={600} height={400} render={(_width, _height) => {
-
+        <Chart width={600} height={400} fill={'#ddd'} render={(_width, _height) => {
                 return (<Tree root={root} width={_width} height={_height}></Tree>)
             }}
         >
