@@ -18,7 +18,7 @@ const Chart: StatelessComponent<IProps<SVGSVGElement>> = (props) => {
     const _height = height - margin.top - margin.bottom
 
     return (
-        <svg width={props.width} height={props.height} {...othersProps}
+        <svg className={'v-chart'} width={props.width} height={props.height} {...othersProps}
         viewBox={`0, 0, ${props.width}, ${props.height}`}>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
                 {render ? render(_width, _height) : null}
