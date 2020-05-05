@@ -1,20 +1,16 @@
-
 import { scaleBand, scaleLinear, ScaleLinear, ScaleBand }from 'd3-scale'
 import { HierarchyNode, HierarchyPointNode, cluster, hierarchy } from 'd3-hierarchy'
-
 import { useMemo } from 'react'
+
 import { range } from 'd3-array'
 
 import config, { Rect } from '../config'
+import { HierarchyPointAndRectNode } from '../types'
 
 export interface State<T> {
     xScale: ScaleLinear<number, number>;
     yScale: ScaleBand<number>;
     clusterNode: HierarchyPointAndRectNode<HierarchyNode<T>>
-}
-
-export interface HierarchyPointAndRectNode<T> extends HierarchyPointNode<T> {
-    rect?: Rect 
 }
 
 const useTree = <T>(root: HierarchyNode<T>, width: number, height: number): State<T> => {

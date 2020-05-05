@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { StatelessComponent, useMemo, useCallback } from 'react'
+import { StatelessComponent } from 'react'
 import { useTree } from '../hook'
-import { hierarchy, cluster, HierarchyNode } from 'd3-hierarchy'
-import { scaleBand, scaleLinear } from 'd3-scale'
-import { range } from 'd3-array'
+import { HierarchyNode } from 'd3-hierarchy'
 import { TNode } from '../types/index'
 import VNode  from './node'
+import VLink from './link'
 
 const Tree: StatelessComponent<{ root: HierarchyNode<TNode>, width: number, height: number}> = (props) => {
     const { clusterNode, xScale, yScale } = useTree<TNode>(props.root, props.width, props.height)
@@ -31,6 +30,17 @@ const Tree: StatelessComponent<{ root: HierarchyNode<TNode>, width: number, heig
                             }
                         }>
                         </VNode>
+                    )
+                })
+            }
+
+            {
+                links.map((link) => {
+                    const { target, source } = link
+                    return (
+                        <VLink link={link} xScale={xScale} yScale={yScale} stroke={'red'} fill={'transparent'}
+                            key={`${target.data.id}_${source.data.id}`}>
+                        </VLink>
                     )
                 })
             }
