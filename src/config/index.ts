@@ -26,8 +26,8 @@ const config : Config = {
         right: 20
     },
     rect: {
-        height: 40,
-        width: 80,
+        height: 30,
+        width: 60,
         radius: 8
     }
 }

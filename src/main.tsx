@@ -10,6 +10,7 @@ import App from './app'
 var table: TNode[] = [
     { "id": "Eve", "parentId": "" },
     { "id": "Cain", "parentId": "Eve" },
+    { "id": "Cain1", "parentId": "Cain"},
     { "id": "Seth", "parentId": "Eve" },
     { "id": "Enos", "parentId": "Seth" },
     { "id": "Noam", "parentId": "Seth" },
@@ -21,7 +22,7 @@ var table: TNode[] = [
     { "id": "Azura", "parentId": "Eve" }
 ];
 
-const root = stratify<TNode>().id(v => v.id).parentId( v => v.parentId )(table)
+const root = stratify<TNode>().id(v => v.id).parentId(v => v.parentId)(table)
 
 ReactDom.render(<TreeContext.Provider value={root}>
     <App/>

@@ -6,7 +6,15 @@ import { TNode } from '../types/index'
 import VNode  from './node'
 import VLink from './link'
 
-const Tree: StatelessComponent<{ root: HierarchyNode<TNode>, width: number, height: number}> = (props) => {
+
+interface IProps<T> {
+    root: HierarchyNode<T>;
+    width: number;
+    height: number;
+}
+
+const Tree: StatelessComponent<IProps<TNode>> = (props) => {
+    // 根据节点来计算
     const { clusterNode, xScale, yScale } = useTree<TNode>(props.root, props.width, props.height)
 
     const listNodes = clusterNode.descendants()

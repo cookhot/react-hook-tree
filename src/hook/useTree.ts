@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { range } from 'd3-array'
 
-import config, { Rect } from '../config'
+import config from '../config'
 import { HierarchyPointAndRectNode } from '../types'
 
 export interface State<T> {
@@ -15,8 +15,14 @@ export interface State<T> {
 
 const useTree = <T>(root: HierarchyNode<T>, width: number, height: number): State<T> => {
     const clusterNode = useMemo(() => {
-        let _clusterNode = cluster<HierarchyNode<T>>()(hierarchy(root).count()) as HierarchyPointAndRectNode<HierarchyNode<T>>
-        
+        // 根据算法生成节点
+        let _clusterNode = cluster<HierarchyNode<T>>().separation((a, b) => {
+            return 1
+        })
+        (hierarchy(root).count()) as HierarchyPointAndRectNode<HierarchyNode<T>>
+
+        console.log(_clusterNode);
+
         _clusterNode.each(node => {
             node.rect = {
                 ...config.rect
