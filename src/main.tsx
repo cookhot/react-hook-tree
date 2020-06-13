@@ -1,13 +1,15 @@
 import * as React from 'react'
 import * as ReactDom from 'react-dom'
-import { hierarchy, stratify, cluster, HierarchyNode } from 'd3-hierarchy'
-import TreeContext from './context/TreeContext'
-import { TNode } from './types/index'
+import { stratify } from 'd3-hierarchy'
+import Cluster from './shape/cluster'
 import './assets/css/index.css'
 
-import App from './app'
+interface TNode {
+    id: string;
+    parentId: string;
+}
 
-var table: TNode[] = [
+const table: TNode[] = [
     { "id": "Eve", "parentId": "" },
     { "id": "Cain", "parentId": "Eve" },
     { "id": "Cain1", "parentId": "Cain"},
@@ -24,6 +26,14 @@ var table: TNode[] = [
 
 const root = stratify<TNode>().id(v => v.id).parentId(v => v.parentId)(table)
 
-ReactDom.render(<TreeContext.Provider value={root}>
-    <App/>
-</TreeContext.Provider>, document.getElementById('root'))
+ReactDom.render(
+    <Cluster root={root} width={800} height={400} renderNode={(data: TNode) => {
+        return (
+            <text dominantBaseline={'text-before-edge'} textAnchor={'center'} >
+                <tspan>
+                    {data.id}
+                </tspan>
+            </text>
+        )
+    }} />, 
+    document.getElementById('root'))
