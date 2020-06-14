@@ -7,6 +7,7 @@ import './assets/css/index.css'
 interface TNode {
     id: string;
     parentId: string;
+    rect?: SVGRect;
 }
 
 const table: TNode[] = [

@@ -10,7 +10,7 @@ interface IProps<SVGSVGElement> extends SVGProps<SVGSVGElement>  {
 
 }
 
-const Chart: StatelessComponent<IProps<SVGSVGElement>> = (props) => {
+export default React.forwardRef<SVGSVGElement, IProps<SVGSVGElement>>((props, ref) => {
     const { width, height, margin = config.margin, render, ...othersProps } = props
 
     const _width = width - margin.left - margin.right
@@ -19,11 +19,9 @@ const Chart: StatelessComponent<IProps<SVGSVGElement>> = (props) => {
     return (
         <svg className={'v-chart'} width={props.width} height={props.height} {...othersProps}
         viewBox={`0, 0, ${props.width}, ${props.height}`}>
-            <g transform={`translate(${margin.left}, ${margin.top})`}>
+            <g transform={`translate(${margin.left}, ${margin.top})`} ref={ref}>
                 {render ? render(_width, _height) : null}
             </g>
         </svg>
     )
-}
-
-export default Chart
+})

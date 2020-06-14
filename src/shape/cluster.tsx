@@ -2,8 +2,10 @@ import * as React from 'react'
 import { HierarchyNode, cluster } from 'd3-hierarchy'
 import { scaleBand, scaleLinear } from 'd3-scale'
 import { range } from 'd3-array'
-import { StatelessComponent, Component, useState } from 'react'
+import { StatelessComponent } from 'react'
+import VirtualSvgElement from './virtual'
 import Chart from '../components/chart'
+import Box from '../components/box'
 
 interface IProps<T> {
     root: HierarchyNode<T>;
@@ -13,60 +15,38 @@ interface IProps<T> {
     height: number;
 }
 
-interface IState {
-    inited: boolean,
-    padding?: number,
-    rect?: SVGRect
-}
-
-class Wrapper<T extends SVGSVGElement> extends React.Component<{ transform: string, childNode: React.ReactElement }, IState> {
-    ref: React.RefObject<T>
-
-    constructor(props) {
-        super(props);
-        this.state = { inited: false }
-        this.ref = React.createRef()
-    }
-
-    // 重现展示节点
-    componentDidMount() {
-        const box = this.ref.current
-        const rect : SVGRect = box.getBBox()
-        this.setState({
-            rect,
-            inited: true
-        })
-    }
-
-    render () {
-        const { childNode, transform } = this.props
-        const { inited, rect } = this.state
-        return (
-            <g transform={transform} style={{ visibility: inited ? 'visible': 'hidden' } } >
-                {
-                    inited ? (<rect x={rect.x} y={rect.y} width={rect.width} height={rect.height}
-                        fill={'transparent'} stroke={'#FF0000'}>
-                    </rect>) : null
-                }
-                { 
-                    React.cloneElement(childNode, { ref: this.ref })
-                }
-            </g>
-        )
-    }
-} 
-
 // any 表示任意数据, 考虑如何展示结果
 const clusterTree: StatelessComponent<IProps<any>> = (props) => {
     const { root, width, height, renderNode } = props
 
+    const [ inited, setInit ] = React.useState(false)
+
     const yRange = range(0, root.height + 1)
+
+    React.useEffect(() => {
+        setInit(true)
+    }, [])
+
+    if (!inited) {
+        return (
+            <VirtualSvgElement root={root} width={width} height={height} renderNode={renderNode}>
+            </VirtualSvgElement>
+        )
+    }
+
+    // 虚拟节点加载并且获取节点数据
 
     const tree = cluster().separation((a, b) => {
         return 1
     })(root)
 
     const listNodes = tree.descendants()
+    // 对节点进行绘制
+    const links = tree.links()
+
+    // console.log(links)
+
+    console.log(listNodes)
 
     return (
         <Chart width={width} height={height} render={(_width, _height) => {
@@ -74,16 +54,34 @@ const clusterTree: StatelessComponent<IProps<any>> = (props) => {
             const xScale = scaleLinear().range([0, _width])
             return (
                 <g className={"x-cluster x-tree"}>
+                    {/* <g className={"x-lines"}>
+                        {
+                            links.map(({ source, target }) => {
+                                const x1 = xScale(source.x)
+                                const x2 = xScale(target.x)
+                                const y1 = yScale(source.depth)
+                                const y2 = yScale(target.depth)
+
+                                return (
+                                    <line x1={x1} x2={x2} y1={y1} y2={y2} key={`${x1}-${x2}`} stroke={'#000'}></line>
+                                )
+                            })
+                        }
+                    </g> */}
                     <g className={"x-node-list"}>
-                        {   
+                        {
                             // 动态计算处理节点的位置
                             listNodes.map((node) => {
                                 const x = xScale(node.x)
                                 const y = yScale(node.depth)
-                                const shape = renderNode(node.data)
+                                
+
+                                console.log(node.data.rect)
+                                
                                 return (
-                                    <Wrapper childNode={shape}
-                                    transform={`translate(${x}, ${y})`} key = {`${x}${y}`} />
+                                    <Box x={x} y={y} childNode={renderNode(node.data)} key={`${x}${y}`}>
+
+                                    </Box>
                                 )
                             })
                         }
