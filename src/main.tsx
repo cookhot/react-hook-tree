@@ -1,13 +1,13 @@
 import * as React from 'react'
-import * as ReactDom from 'react-dom'
+import * as ReactDOM from 'react-dom'
 import { stratify } from 'd3-hierarchy'
+import { HierarchyNode } from 'd3-hierarchy'
 import Cluster from './shape/cluster'
 import './assets/css/index.css'
 
 interface TNode {
     id: string;
     parentId: string;
-    rect?: SVGRect;
 }
 
 const table: TNode[] = [
@@ -25,10 +25,13 @@ const table: TNode[] = [
     { "id": "Azura", "parentId": "Eve" }
 ];
 
-const root = stratify<TNode>().id(v => v.id).parentId(v => v.parentId)(table)
+const root : HierarchyNode<TNode>  = stratify<TNode>().id(v => v.id).parentId(v => v.parentId)(table)
 
-ReactDom.render(
+ReactDOM.render(
     <Cluster root={root} width={800} height={400} renderNode={(data: TNode) => {
+        /**
+         * 自己动态生成所需要的内容
+         */
         return (
             <text dominantBaseline={'text-before-edge'} textAnchor={'center'} >
                 <tspan>
