@@ -34,7 +34,8 @@ const Tree: StatelessComponent<IProps<TNode>> = (props) => {
                                     <tspan>
                                             {node.data.id}
                                     </tspan>
-                                </text>)
+                                </text>
+                                )
                             }
                         }>
                         </VNode>

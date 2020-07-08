@@ -7,7 +7,7 @@ import { StatelessComponent } from 'react'
 import { Suspense, lazy } from 'react'
 // import VirtualSvgElement from './virtual'
 import Chart from '../components/chart'
-// import Box from '../components/box'
+import Box from '../components/box'
 
 interface IRenderNode<T> {
     (data: T) : React.ReactElement
@@ -75,95 +75,86 @@ function renderNodeRect<T>(root: HierarchyNode<T>, render: IRenderNode<T>): Prom
     })
 }
 
+
+
 function clusterTree<T>(props: IProps<T>) : React.ReactElement {
     const { root, width, height, renderNode } = props
+    
+    // const [ loading, setLoading ] = React.useState(true)
 
-    // renderNodeRect(root, renderNode)
+    const [ rootAndRect, setRootAndRect ] = React.useState(null)
+
+    // let rootRect: HierarchyRectNode<T> = React.useMemo(() => {
+    //     return root as HierarchyRectNode<T>
+    // }, [root])
 
     React.useEffect(() => {
-        renderNodeRect(root, renderNode).then((root) => {
-            console.log(root)
+        const tree = cluster().separation((a, b) => {
+            return 1
+        })(root)
+
+        renderNodeRect(tree, renderNode).then((node) => {
+            setRootAndRect(node)
         })
-    }, [])
-    
-    return (<Suspense fallback={<div>Loading...</div>}>
-        
-    </Suspense>)
+    }, [root])
 
-    // const [ loading, setLoading ] = React.useState(false)
+    const loading = React.useMemo(() => {
+        if (!rootAndRect) {
+            return true
+        }
 
+        return false
 
+    }, [rootAndRect])
 
-
-    // 检查类型
-    // type RectDatum = T & { rect?: SVGRect  }
-
-    // const rootRect: HierarchyRectNode<T, RectDatum> = renderNodeRect<T, RectDatum>(root, renderNode)
-
-    // 加载一次
-    // React.useEffect(() => {
-    //     setInit(true)
-    // }, [])
-
+    if (loading) {
+        return (<div>loading</div>)
+    }
 
     
+    // console.log(tree)
 
-
-    // 根据 renderNode 生成虚拟的节点信息
-
-    // const [ inited, setInit ] = React.useState(false)
-
-    // const yRange = range(0, root.height + 1)
-
-    // React.useEffect(() => {
-    //     setInit(true)
-    // }, [])
-
-    // if (!inited) {
-    //     return (
-    //         <VirtualSvgElement root={root} width={width} height={height} renderNode={renderNode}>
-    //         </VirtualSvgElement>
-    //     )
-    // }
-
-    // return (<div>hello world</div>)
-
-    // // 虚拟节点加载并且获取节点数据
-    // const tree = cluster().separation((a, b) => {
-    //     return 1
-    // })(root)
-
-    // const listNodes = tree.descendants()
-    // // 对节点进行绘制
+    
+    const listNodes = rootAndRect.descendants()
+    // // // // 对节点进行绘制
     // const links = tree.links()
 
+    const yRange = range(0, root.height + 1)
+
+    // console.log(tree, listNodes)
+
     // return (
-    //     <Chart width={width} height={height} render={(_width, _height) => {
-    //         const yScale = scaleBand<number>().range([0, _height]).domain(yRange).paddingOuter(.1).paddingInner(.1)
-    //         const xScale = scaleLinear().range([0, _width])
-    //         return (
-    //             <g className={"x-cluster x-tree"}>
-    //                 <g className={"x-node-list"}>
-    //                     {
-    //                         // 动态计算处理节点的位置
-    //                         listNodes.map((node) => {
-    //                             const x = xScale(node.x)
-    //                             const y = yScale(node.depth)
-
-    //                             console.log(node.data.rect)
-
-    //                             return (
-    //                                 <Box x={x} y={y} childNode={renderNode(node.data)} key={`${x}${y}`}>
-    //                                 </Box>
-    //                             )
-    //                         })
-    //                     }
-    //                 </g>
-    //             </g>
-    //         )
-    //     }}>
-    //      </Chart>
+    //     <div>hello world</div>
     // )
+
+    return (
+        <Chart width={width} height={height} render={(_width, _height) => {
+            const yScale = scaleBand<number>().range([0, _height]).domain(yRange).paddingOuter(.1).paddingInner(.1)
+            const xScale = scaleLinear().range([0, _width])
+            return (
+                <g className={"x-cluster x-tree"}>
+                    <g className={"x-node-list"}>
+                        {
+                            // 动态计算处理节点的位置
+                            listNodes.map((node) => {
+                                console.log(node)
+                                const x = xScale(node.x)
+                                const y = yScale(node.depth)
+
+                                console.log(node.rect)
+
+                                return (
+                                    <Box x={x} y={y} svgRect={node.rect} childNode={renderNode(node.data)} key={`${x}${y}`}>
+                                    </Box>
+                                )
+                            })
+                        }
+                    </g>
+                </g>
+            )
+        }}>
+         </Chart>
+    )
 }
 
 // any 表示任意数据, 考虑如何展示结果
