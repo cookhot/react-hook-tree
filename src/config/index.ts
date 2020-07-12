@@ -5,18 +5,9 @@ export interface Margin {
     right: number;
 }
 
-export interface Rect {
-    width?: number;
-    height?: number;
-    radius?: number;
-}
-
 declare interface Config {
-    margin: Margin,
-    rect: Rect
+    margin: Margin
 }
-
-
 
 const config : Config = {
     margin: {
@@ -24,11 +15,6 @@ const config : Config = {
         bottom: 20,
         left: 20,
         right: 20
-    },
-    rect: {
-        height: 30,
-        width: 60,
-        radius: 8
     }
 }
 

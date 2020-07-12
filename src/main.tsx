@@ -30,7 +30,7 @@ const root : HierarchyNode<TNode>  = stratify<TNode>().id(v => v.id).parentId(v 
 ReactDOM.render(
     <Cluster root={root} width={800} height={400} renderNode={(data: TNode) => {
         /**
-         * 自己动态生成所需要的内容
+         * 定义自身的渲染节点
          */
         return (
             <text dominantBaseline={'text-before-edge'} textAnchor={'center'} >

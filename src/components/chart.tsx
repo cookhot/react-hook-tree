@@ -2,12 +2,11 @@ import * as React from 'react'
 import { StatelessComponent, SVGProps } from 'react'
 import config, { Margin } from '../config'
 
-interface IProps<SVGSVGElement> extends SVGProps<SVGSVGElement>  {
+declare interface IProps<SVGSVGElement> extends SVGProps<SVGSVGElement>  {
     width: number;
     height: number;
     render?: (width: number, height: number) => React.ReactNode;
     margin?: Margin;
-
 }
 
 export default React.forwardRef<SVGSVGElement, IProps<SVGSVGElement>>((props, ref) => {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StatelessComponent, SVGProps } from 'react'
+import { StatelessComponent } from 'react'
 
 interface IProps {
     x: number;
