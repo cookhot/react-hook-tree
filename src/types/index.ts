@@ -1,10 +1,13 @@
 import * as React from 'react'
-import { HierarchyNode } from 'd3-hierarchy'
-
-import { HierarchyPointNode } from 'd3-hierarchy'
+import { HierarchyNode, HierarchyPointNode } from 'd3-hierarchy'
+import { Margin } from '../config';
 export interface TNode {
     id: string;
     parentId: string;
+}
+
+export interface IBoxProps extends React.SVGProps<SVGElement> {
+    margin?: Margin;
 }
 
 export interface HierarchyRectNode<Datum> extends HierarchyNode<Datum> {
@@ -16,13 +19,13 @@ export interface HierarchyPointAndRectNode<Datum> extends HierarchyPointNode<Dat
 }
 
 export interface IRenderNode<Datum> {
-    (data: Datum): React.ReactElement
+    (data: HierarchyPointNode<Datum>): React.ReactElement
 }
 
 export interface IRenderLine<Datum> {
-    (source: Datum, target: Datum): React.ReactSVGElement
+    (source: HierarchyPointNode<Datum>, target: HierarchyPointNode<Datum>): React.ReactElement
 }
 
-export interface IRenderHierarchWithRect<Datum> {
-    (root: HierarchyNode<Datum>, renderNode: IRenderNode<Datum>): Promise<HierarchyRectNode<Datum>>
+export interface IRenderHierarchNodeWithRect {
+    <Datum>(root: HierarchyNode<Datum>, renderNode: IRenderNode<Datum>): Promise<HierarchyRectNode<Datum>>
 }

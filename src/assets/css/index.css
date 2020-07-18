@@ -2,6 +2,11 @@
     border: 1px solid #000000;
 }
 
+svg {
+    margin: 0;
+    padding: 0;
+}
+
 rect {
     shape-rendering: crispEdges;
 }

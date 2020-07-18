@@ -1,24 +1,40 @@
 import * as React from 'react'
 import { StatelessComponent } from 'react'
+import { IBoxProps } from '../types'
+import { BoxMarginConfig } from '../config'
 
-interface IProps {
-    x: number;
-    y: number;
-    svgRect: SVGRect;
-    childNode: React.ReactElement;
+interface IRectProps {
+    rect: SVGRect;
 }
 
-const Box: StatelessComponent<IProps> = (props) => {
-    const { x, y, svgRect, childNode } = props
+function RectBox(props: IRectProps) {
+    const { rect, ...otherProps } = props
+    if(!rect) {
+        return null
+    }
+
     return (
-        <g transform={`translate(${x}, ${y})`} >
-            {   
-                <rect x={svgRect.x} y={svgRect.y} width={svgRect.width} height={svgRect.height}
-                    fill={'transparent'} stroke={'#FF0000'}>
-                </rect>
-            }
+        <rect x={rect.x} y={rect.y} width={rect.width} height={rect.height} {...otherProps} ></rect>
+    )
+}
+
+// 根据传入的 children 动态的生成 box
+const Box: StatelessComponent<IBoxProps> = (props) => {
+    const [ boxRect, setBoxRect] = React.useState<SVGRect>(null)
+
+    const { x, y, margin = BoxMarginConfig, ...otherProps } = props
+
+    const initBox = React.useCallback((current) => {
+        if (current && !boxRect) {
+            setBoxRect(current.getBBox())
+        }
+    }, [])
+
+    return (
+        <g transform={`translate(${x}, ${y})`} ref={initBox}>
+            <RectBox rect={boxRect} {...otherProps}></RectBox>
             {
-                React.cloneElement(childNode)
+                props.children
             }
         </g>
     )

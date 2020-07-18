@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StatelessComponent, SVGProps } from 'react'
-import config, { Margin } from '../config'
+import Margin, { ChartMarginConfig } from '../config'
 
 declare interface IProps<SVGSVGElement> extends SVGProps<SVGSVGElement>  {
     width: number;
@@ -10,7 +10,7 @@ declare interface IProps<SVGSVGElement> extends SVGProps<SVGSVGElement>  {
 }
 
 export default React.forwardRef<SVGSVGElement, IProps<SVGSVGElement>>((props, ref) => {
-    const { width, height, margin = config.margin, render, ...othersProps } = props
+    const { width, height, margin = ChartMarginConfig, render, ...othersProps } = props
 
     const _width = width - margin.left - margin.right
     const _height = height - margin.top - margin.bottom
