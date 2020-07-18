@@ -1,6 +1,13 @@
 import * as React from 'react'
 import { HierarchyNode, HierarchyPointNode } from 'd3-hierarchy'
-import { Margin } from '../config';
+
+export interface Margin {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+}
+
 export interface TNode {
     id: string;
     parentId: string;

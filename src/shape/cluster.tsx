@@ -2,7 +2,7 @@ import * as React from 'react'
 import { IRenderNode, IRenderLine } from '../types'
 import { HierarchyNode, HierarchyPointNode,  cluster } from 'd3-hierarchy'
 // import renderHierarchNodeWithRect from '../renderHierarchNodeWithRect'
-import { Margin } from '../config'
+import { Margin } from '../types'
 import Chart from '../components/chart'
 import Box from '../components/box'
 
@@ -40,11 +40,11 @@ function clusterTree<Datum>(props: IProps<Datum>) {
                             })
                         }
                     </g>
-
                     <g className={"x-node-line"}>
                         {
                             // 动态计算处理节点的位置
                             links.map(({source, target}) => {
+                                console.log(source, target)
                                 return renderLine(source, target)
                             })
                         }       

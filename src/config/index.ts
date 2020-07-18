@@ -1,9 +1,4 @@
-export interface Margin {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-}
+import { Margin } from '../types'
 
 export const svgHiddenAttrs = {
     visibility: 'hidden',
@@ -16,19 +11,16 @@ export const svgHiddenAttrs = {
     overflow: 'scroll'
 }
 
-export const BoxMarginConfig = {
+export const BoxMarginConfig: Margin = {
     top: 5,
     bottom: 5,
     left: 5,
     right: 5
 }
 
-export const ChartMarginConfig = {
+export const ChartMarginConfig: Margin = {
     top: 20,
     bottom: 20,
     left: 20,
     right: 20
 }
-
-
-export default Margin

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StatelessComponent, SVGProps } from 'react'
-import Margin, { ChartMarginConfig } from '../config'
+import { ChartMarginConfig } from '../config'
+import { Margin } from '../types'
 
 declare interface IProps<SVGSVGElement> extends SVGProps<SVGSVGElement>  {
     width: number;
