@@ -5,17 +5,17 @@ const data = [
   {
     'source': "",
     'source_level': 0,
-    'target': 'holdout',
+    'target': 'kuaishou',
     'target_level': 0
   },
   {
-    'source': "holdout",
+    'source': "kuaishou",
     'source_level': 0,
     'target': '无电商感直播屏蔽holdout',
     'target_level': 1.0
   },
   {
-    'source': "holdout",
+    'source': "kuaishou",
     'source_level': 0,
     'target': '1月app总combo实验',
     'target_level': 1.0
@@ -45,13 +45,16 @@ const data = [
   },
   {
     'source': '公域无直播场景屏蔽holdout',
-  'source_level': 1.5,
-  'target': '公域电商直播+内流上下滑22年holdout实验',
-  'target_level': 2.0
+    'source_level': 1.5,
+    'target': '公域电商直播+内流上下滑22年holdout实验',
+    'target_level': 2.0
   },
 ]
 
-const svg = Tree(data);
+const svg = Tree(data, {
+  width: 1600,
+  height: 600
+});
 
 document.body.appendChild(svg);
 

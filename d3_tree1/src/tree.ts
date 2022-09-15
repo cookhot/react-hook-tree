@@ -1,5 +1,9 @@
 import * as d3 from 'd3';
 
+const getNodeWidth = (node: any) => {
+  return (node.id || '').length * 9
+}
+
 export default function Tree(data: any, { // data is either tabular (array of objects) or hierarchy (nested objects)
   path, // as an alternative to id and parentId, returns an array identifier, imputing internal nodes
   id = Array.isArray(data) ? (d: { id: any; }) => d.id : null, // if tabular data, given a d in data, returns a unique identifier (string)
@@ -14,7 +18,7 @@ export default function Tree(data: any, { // data is either tabular (array of ob
   width = 640, // outer width, in pixels
   height, // outer height, in pixels
   r = 3, // radius of nodes
-  padding = 1, // horizontal padding for first and last column
+  padding = 1.5, // horizontal padding for first and last column
   fill = "#999", // fill for nodes
   fillOpacity, // fill opacity for nodes
   stroke = "#555", // stroke for links
@@ -46,7 +50,7 @@ export default function Tree(data: any, { // data is either tabular (array of ob
   const L = label == null ? null : descendants.map((d: { data: any; }) => label(d.data, d));
 
   // Compute the layout.
-  const dx = 10;
+  const dx = 110;
   const dy = width / (root.height + padding);
   tree().nodeSize([dx, dy])(root);
 
@@ -62,12 +66,26 @@ export default function Tree(data: any, { // data is either tabular (array of ob
   if (height === undefined) height = x1 - x0 + dx * 2;
 
   const svg = d3.create("svg")
-      .attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
+      .attr("viewBox", [0, x0 - dx, width, height])
       .attr("width", width)
       .attr("height", height)
       .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
       .attr("font-family", "sans-serif")
       .attr("font-size", 10);
+
+      // 处理 links
+  const links = root.links().map(({ source, target }: any) => {
+    return {
+      source: {
+        x: source.x,
+        y: source.y + getNodeWidth(source),
+      },
+      target: {
+        x: target.x,
+        y: target.y
+      }
+    }
+  })
 
   svg.append("g")
       .attr("fill", "none")
@@ -77,7 +95,7 @@ export default function Tree(data: any, { // data is either tabular (array of ob
       .attr("stroke-linejoin", strokeLinejoin)
       .attr("stroke-width", strokeWidth)
     .selectAll("path")
-      .data(root.links())
+      .data(links)
       .join("path")
         .attr("d", d3.linkHorizontal()
             .x((d: { y: any; }) => d.y)
@@ -91,21 +109,26 @@ export default function Tree(data: any, { // data is either tabular (array of ob
       .attr("target", link == null ? null : linkTarget)
       .attr("transform", (d: { y: any; x: any; }) => `translate(${d.y},${d.x})`);
 
-  node.append("circle")
+  node.append("rect")
+      .attr("height", "30px") 
+      .attr("width", (d: any) => { return `${ getNodeWidth(d) }px` } )
+      .attr("transform", (d:any) => `translate(0, -15)`)
       .attr("fill", (d: { children: any; }) => d.children ? stroke : fill)
-      .attr("r", r);
+  
+  // node.append("text")
+  // .text
 
   if (title != null) node.append("title")
       .text((d: { data: any; }) => title(d.data, d));
 
-  if (L) node.append("text")
+  node.append("text")
       .attr("dy", "0.32em")
-      .attr("x", (d: { children: any; }) => d.children ? -6 : 6)
-      .attr("text-anchor", (d: { children: any; }) => d.children ? "end" : "start")
+      .attr("x", (d: any) => getNodeWidth(d) / 2 )
+      .attr("text-anchor", 'middle')
       .attr("paint-order", "stroke")
       .attr("stroke", halo)
       .attr("stroke-width", haloWidth)
-      .text((d: any, i: string | number) => L[i]);
+      .text((d: any, i: string | number) => { return d.id });
 
   return svg.node();
 }

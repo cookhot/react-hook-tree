@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 const data = [
   {
     'source': "",
-    'source_level': 0,
+    'source_level': -1,
     'target': 'holdout',
     'target_level': 0
   },
